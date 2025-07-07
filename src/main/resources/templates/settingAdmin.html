@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings | Admin Panel</title>
+    <link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style type="text/css">
+        :root {
+            --primary-color: #3498db;
+            --primary-light: #5dade2;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --sidebar-width: 260px;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-light: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-medium: 0 4px 20px rgba(0,0,0,0.12);
+            --shadow-heavy: 0 8px 25px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--dark-color) 0%, #34495e 100%);
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            box-shadow: var(--shadow-heavy);
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-menu {
+            margin-top: 1.5rem;
+        }
+        
+        .nav-item {
+            list-style: none;
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--light-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+        
+        .nav-link:hover, 
+        .nav-link.active {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Enhanced Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: transparent;
+            width: calc(100% - var(--sidebar-width));
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            font-weight: 700;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 101;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 2rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .settings-tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: var(--transition);
+            color: #666;
+            font-size: 0.95rem;
+            bottom: -1px;
+        }
+
+        .settings-tab:hover {
+            color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .settings-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .settings-tab i {
+            margin-right: 0.5rem;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: none;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        .settings-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .settings-section.sticky-header h3 {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+            padding: 0.5rem 0;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .settings-section h3 i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.85rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #fdfdfd;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-group input:valid:not(:placeholder-shown) {
+            border-color: #27ae60;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2327ae60" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg>') no-repeat right 0.75rem center/16px;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.75rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.75rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .btn i {
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            border-color: #d0d0d0;
+            transform: translateY(-1px);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e0e0e0;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        input:checked ~ .toggle-text.enabled {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        input:not(:checked) ~ .toggle-text.disabled {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: var(--dark-color);
+            transform: scale(1.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .color-option.selected:after {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* File Upload */
+        .file-upload {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .file-upload-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--border-radius);
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px dashed #ddd;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .file-upload-preview:hover,
+        .file-upload-preview.dragover {
+            border-color: var(--primary-color);
+            background-color: #f0f7fd;
+        }
+
+        .file-upload-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .file-upload-info {
+            flex: 1;
+        }
+
+        .file-upload-info p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        /* Tooltips */
+        .help-text {
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+            position: relative;
+            cursor: help;
+        }
+
+        .help-text:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0.9;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.hidden {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .settings-tabs {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .settings-tab {
+                white-space: nowrap;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .user-profile {
+                align-self: flex-end;
+            }
+        }
+
+        /* Additional UI Elements */
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #e8f4fc;
+            color: var(--primary-color);
+        }
+
+        .status-badge.active {
+            background-color: #e8f6e8;
+            color: #27ae60;
+        }
+
+        .status-badge.inactive {
+            background-color: #fce8e8;
+            color: #e74c3c;
+        }
+
+        .section-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <!-- Enhanced Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            EduFlow
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a th:href="@{/Admin/}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/course}" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/useradmin}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/instructor}" class="nav-link ">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Instructors</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/enrollment}" class="nav-link ">
+                    <i class="fas fa-tasks"></i>
+                    <span>Enrollments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/logout}" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="header">
+            <h1 class="header-title">
+                <i class="fas fa-cog"></i>
+                System Settings
+            </h1>
+            <div class="user-profile" aria-label="User Profile">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div class="user-name">Admin User</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+                <!-- <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i> -->
+            </div>
+        </div>
+        
+        <div class="settings-tabs" role="tablist">
+            <div class="settings-tab active" data-tab="general" role="tab" aria-selected="true" aria-controls="general-settings">
+                <i class="fas fa-sliders-h"></i> General
+            </div>
+            <div class="settings-tab" data-tab="appearance" role="tab" aria-selected="false" aria-controls="appearance-settings">
+                <i class="fas fa-paint-brush"></i> Appearance
+            </div>
+            <div class="settings-tab" data-tab="email" role="tab" aria-selected="false" aria-controls="email-settings">
+                <i class="fas fa-envelope"></i> Email
+            </div>
+            <div class="settings-tab" data-tab="payment" role="tab" aria-selected="false" aria-controls="payment-settings">
+                <i class="fas fa-credit-card"></i> Payment
+            </div>
+            <div class="settings-tab" data-tab="security" role="tab" aria-selected="false" aria-controls="security-settings">
+                <i class="fas fa-shield-alt"></i> Security
+            </div>
+        </div>
+        
+        <!-- General Settings -->
+        <div class="settings-content active" id="general-settings" role="tabpanel">
+            <div class="settings-section sticky-header">
+                <h3><i class="fas fa-info-circle"></i> System Information</h3>
+                <p class="section-description">Configure the basic information about your platform that will be visible to users.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="site-name">Site Name</label>
+                        <input type="text" id="site-name" value="EduFlow" required>
+                        <p class="help-text" data-tooltip="This name will appear in page titles and emails.">This name will appear in page titles and emails.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="site-url">Site URL</label>
+                        <input type="url" id="site-url" value="https://Eduflow.coursemanager.com" required>
+                        <p class="help-text" data-tooltip="The base URL for your platform.">The base URL for your platform.</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="site-description">Site Description</label>
+                    <textarea id="site-description" required>The complete course management system for modern education</textarea>
+                    <p class="help-text" data-tooltip="A brief description of your platform for SEO and social sharing.">A brief description of your platform for SEO and social sharing.</p>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-wrench"></i> System Configuration</h3>
+                <p class="section-description">Adjust the fundamental settings that control how your platform operates.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timezone">Timezone</label>
+                        <select id="timezone" required>
+                            <option>(UTC-12:00) International Date Line West</option>
+                            <option>(UTC-11:00) Midway Island, Samoa</option>
+                            <option>(UTC-10:00) Hawaii</option>
+                            <option>(UTC-09:00) Alaska</option>
+                            <option>(UTC-08:00) Pacific Time (US & Canada)</option>
+                            <option selected>(UTC-05:00) Eastern Time (US & Canada)</option>
+                            <option>(UTC) Greenwich Mean Time, London</option>
+                            <option>(UTC+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                            <option>(UTC+08:00) Beijing, Hong Kong, Singapore</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-format">Date Format</label>
+                        <select id="date-format" required>
+                            <option value="Y-m-d">YYYY-MM-DD (2023-06-20)</option>
+                            <option value="m/d/Y">MM/DD/YYYY (06/20/2023)</option>
+                            <option value="d/m/Y">DD/MM/YYYY (20/06/2023)</option>
+                            <option value="F j, Y">F j, Y (June 20, 2023)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Maintenance Mode</label>
+                        <div class="toggle-label">
+                            <span class="toggle-text disabled">Disabled</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="maintenance-mode" aria-label="Toggle Maintenance Mode">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-text enabled">Enabled</span>
+                        </div>
+                        <p class="help-text" data-tooltip="When enabled, only administrators can access the platform.">When enabled, only administrators can access the platform.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>User Registration</label>
+                        <div class="toggle-label">
+                            <span class="toggle-text disabled">Disabled</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="user-registration" checked aria-label="Toggle User Registration">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-text enabled">Enabled</span>
+                        </div>
+                        <p class="help-text" data-tooltip="Allow new users to register accounts on your platform.">Allow new users to register accounts on your platform.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" aria-label="Cancel Changes">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" aria-label="Save Changes">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Appearance Settings -->
+        <div class="settings-content" id="appearance-settings" role="tabpanel">
+            <div class="settings-section sticky-header">
+                <h3><i class="fas fa-palette"></i> Theme Settings</h3>
+                <p class="section-description">Customize the visual appearance of your platform to match your brand.</p>
+                <div class="form-group">
+                    <label>Primary Color</label>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background-color: #3498db;" data-color="primary" title="Default Blue"></div>
+                        <div class="color-option" style="background-color: #e74c3c;" data-color="primary" title="Red"></div>
+                        <div class="color-option" style="background-color: #2ecc71;" data-color="primary" title="Green"></div>
+                        <div class="color-option" style="background-color: #9b59b6;" data-color="primary" title="Purple"></div>
+                        <div class="color-option" style="background-color: #f39c12;" data-color="primary" title="Orange"></div>
+                        <div class="color-option" style="background-color: #1abc9c;" data-color="primary" title="Turquoise"></div>
+                    </div>
+                    <p class="help-text" data-tooltip="Select the primary color that will be used for buttons, links, and highlights.">Select the primary color that will be used for buttons, links, and highlights.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Dark Mode</label>
+                    <div class="toggle-label">
+                        <span class="toggle-text disabled">Light</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode" aria-label="Toggle Dark Mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-text enabled">Dark</span>
+                    </div>
+                    <p class="help-text" data-tooltip="Enable dark mode for the entire platform interface.">Enable dark mode for the entire platform interface.</p>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-image"></i> Logo & Branding</h3>
+                <p class="section-description">Upload your logo and favicon to customize the platform's branding.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <div class="file-upload">
+                            <div class="file-upload-preview" id="logo-preview">
+                                <img src="https://via.placeholder.com/200x60?text=Your+Logo" alt="Current Logo">
+                            </div>
+                            <div class="file-upload-info">
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('logo-upload').click();" aria-label="Upload New Logo">
+                                    <i class="fas fa-upload"></i> Upload New
+                                </button>
+                                <input type="file" id="logo-upload" accept="image/png" style="display: none;">
+                                <p>Recommended size: 200x60px (transparent PNG)</p>
+                                <p>Max file size: 2MB</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Favicon</label>
+                        <div class="file-upload">
+                            <div class="file-upload-preview" id="favicon-preview">
+                                <img src="https://via.placeholder.com/32x32?text=Fav" alt="Current Favicon">
+                            </div>
+                            <div class="file-upload-info">
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('favicon-upload').click();" aria-label="Upload New Favicon">
+                                    <i class="fas fa-upload"></i> Upload New
+                                </button>
+                                <input type="file" id="favicon-upload" accept="image/png" style="display: none;">
+                                <p>Recommended size: 32x32px (square PNG)</p>
+                                <p>Max file size: 500KB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" aria-label="Cancel Changes">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" aria-label="Save Changes">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Email Settings -->
+        <div class="settings-content" id="email-settings" role="tabpanel">
+            <div class="settings-section sticky-header">
+                <h3><i class="fas fa-server"></i> Email Configuration</h3>
+                <p class="section-description">Set up your email server settings for system notifications and user communications.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email-from">From Email</label>
+                        <input type="email" id="email-from" value="noreply@coursemanager.com" required>
+                        <p class="help-text" data-tooltip="The email address that system emails will be sent from.">The email address that system emails will be sent from.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-from-name">From Name</label>
+                        <input type="text" id="email-from-name" value="CourseManager" required>
+                        <p class="help-text" data-tooltip="The name that will appear in the 'From' field of emails.">The name that will appear in the "From" field of emails.</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email-protocol">Email Protocol</label>
+                    <select id="email-protocol" required>
+                        <option value="smtp">SMTP</option>
+                        <option value="sendmail">Sendmail</option>
+                        <option value="mail">PHP Mail</option>
+                    </select>
+                    <p class="help-text" data-tooltip="Select the method your server uses to send emails.">Select the method your server uses to send emails.</p>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtp-host">SMTP Host</label>
+                        <input type="text" id="smtp-host" value="smtp.example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtp-port">SMTP Port</label>
+                        <input type="number" id="smtp-port" value="587">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtp-username">SMTP Username</label>
+                        <input type="text" id="smtp-username" value="your_username">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtp-password">SMTP Password</label>
+                        <input type="password" id="smtp-password" value="your_password">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="smtp-security">SMTP Security</label>
+                    <select id="smtp-security">
+                        <option value="tls">TLS</option>
+                        <option value="ssl">SSL</option>
+                        <option value="">None</option>
+                    </select>
+                    <p class="help-text" data-tooltip="Most modern servers use TLS on port 587 or SSL on port 465.">Most modern servers use TLS on port 587 or SSL on port 465.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Test Email Configuration</label>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="email" placeholder="Enter test email address" style="margin-bottom: 0;" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" style="width: 100%;" aria-label="Send Test Email">
+                                <i class="fas fa-paper-plane"></i> Send Test Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-envelope-open-text"></i> Email Templates</h3>
+                <p class="section-description">Customize the content of system-generated emails sent to users.</p>
+                <div class="form-group">
+                    <label for="welcome-email">Welcome Email</label>
+                    <textarea id="welcome-email" rows="6">Dear {user_name},
+
+Welcome to CourseManager! Your account has been successfully created.
+
+You can now login using your credentials:
+Username: {user_email}
+Password: The password you chose during registration
+
+Start exploring our courses today!
+
+Best regards,
+CourseManager Team</textarea>
+                    <p class="help-text" data-tooltip="Available variables: {user_name}, {user_email}, {site_name}, {site_url}">Available variables: {user_name}, {user_email}, {site_name}, {site_url}</p>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" aria-label="Cancel Changes">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" aria-label="Save Changes">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Payment Settings -->
+        <div class="settings-content" id="payment-settings" role="tabpanel">
+            <div class="settings-section sticky-header">
+                <h3><i class="fas fa-credit-card"></i> Payment Gateway</h3>
+                <p class="section-description">Configure payment processing for course purchases and subscriptions.</p>
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <select id="payment-method" required>
+                        <option value="stripe">Stripe</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="offline">Offline Payment</option>
+                    </select>
+                    <p class="help-text" data-tooltip="Select the primary payment gateway for your platform.">Select the primary payment gateway for your platform.</p>
+                </div>
+                
+                <div id="stripe-settings">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="stripe-key">Stripe Publishable Key</label>
+                            <input type="text" id="stripe-key" value="pk_test_xxxxxxxxxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label for="stripe-secret">Stripe Secret Key</label>
+                            <input type="password" id="stripe-secret" value="sk_test_xxxxxxxxxxxxxxxx">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stripe-webhook">Stripe Webhook Secret</label>
+                        <input type="password" id="stripe-webhook" value="whsec_xxxxxxxxxxxxxxxx">
+                        <p class="help-text" data-tooltip="Configure your Stripe webhook to: {site_url}/webhooks/stripe">Configure your Stripe webhook to: <code>{site_url}/webhooks/stripe</code></p>
+                    </div>
+                </div>
+                
+                <div id="paypal-settings" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paypal-client-id">PayPal Client ID</label>
+                            <input type="text" id="paypal-client-id" placeholder="Enter PayPal Client ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="paypal-secret">PayPal Secret</label>
+                            <input type="password" id="paypal-secret" placeholder="Enter PayPal Secret">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paypal-mode">PayPal Mode</label>
+                        <select id="paypal-mode">
+                            <option value="sandbox">Sandbox</option>
+                            <option value="live">Live</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-money-bill-wave"></i> Currency Settings</h3>
+                <p class="section-description">Set up the currency and formatting for all monetary values.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" required>
+                            <option value="USD" selected>US Dollar (USD)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="GBP">British Pound (GBP)</option>
+                            <option value="JPY">Japanese Yen (JPY)</option>
+                            <option value="CAD">Canadian Dollar (CAD)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="currency-position">Currency Position</label>
+                        <select id="currency-position">
+                            <option value="left">Left ($100)</option>
+                            <option value="right">Right (100$)</option>
+                            <option value="left-space">Left with space ($ 100)</option>
+                            <option value="right-space">Right with space (100 $)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="decimal-separator">Decimal Separator</label>
+                        <select id="decimal-separator">
+                            <option value="." selected>Period (.)</option>
+                            <option value=",">Comma (,)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="thousand-separator">Thousand Separator</label>
+                        <select id="thousand-separator">
+                            <option value="," selected>Comma (,)</option>
+                            <option value=".">Period (.)</option>
+                            <option value=" ">Space ( )</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" aria-label="Cancel Changes">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" aria-label="Save Changes">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="settings-content" id="security-settings" role="tabpanel">
+            <div class="settings-section sticky-header">
+                <h3><i class="fas fa-lock"></i> Login Security</h3>
+                <p class="section-description">Configure security settings related to user authentication.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="login-attempts">Max Login Attempts</label>
+                        <input type="number" id="login-attempts" value="5" min="1" required>
+                        <p class="help-text" data-tooltip="Number of failed attempts before account is temporarily locked.">Number of failed attempts before account is temporarily locked.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lockout-time">Lockout Time (minutes)</label>
+                        <input type="number" id="lockout-time" value="30" min="1" required>
+                        <p class="help-text" data-tooltip="Duration of account lockout after max attempts reached.">Duration of account lockout after max attempts reached.</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password-strength">Password Strength Requirement</label>
+                    <select id="password-strength" required>
+                        <option value="1">Low (Minimum 6 characters)</option>
+                        <option value="2" selected>Medium (8 characters, letters and numbers)</option>
+                        <option value="3">High (8 characters, uppercase, lowercase, numbers and symbols)</option>
+                    </select>
+                    <p class="help-text" data-tooltip="Set the minimum complexity required for user passwords.">Set the minimum complexity required for user passwords.</p>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-user-shield"></i> Two-Factor Authentication</h3>
+                <p class="section-description">Add an extra layer of security to user accounts with 2FA.</p>
+                <div class="form-group">
+                    <label for="2fa-method">2FA Method</label>
+                    <select id="2fa-method" required>
+                        <option value="none">Disabled</option>
+                        <option value="email">Email</option>
+                        <option value="authenticator">Authenticator App</option>
+                    </select>
+                    <p class="help-text" data-tooltip="Select the two-factor authentication method for user accounts.">Select the two-factor authentication method for user accounts.</p>
+                </div>
+                
+                <div id="2fa-email-settings">
+                    <div class="form-group">
+                        <label for="2fa-email-template">2FA Email Template</label>
+                        <textarea id="2fa-email-template" rows="4">Your two-factor authentication code is: {code}
+
+This code will expire in 10 minutes.</textarea>
+                        <p class="help-text" data-tooltip="Available variables: {code}, {user_name}, {site_name}">Available variables: {code}, {user_name}, {site_name}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-clock"></i> Session Management</h3>
+                <p class="section-description">Control how user sessions are handled on your platform.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="session-timeout">Session Timeout (minutes)</label>
+                        <input type="number" id="session-timeout" value="120" min="1" required>
+                        <p class="help-text" data-tooltip="Time of inactivity before user is automatically logged out.">Time of inactivity before user is automatically logged out.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="session-limit">Max Concurrent Sessions</label>
+                        <input type="number" id="session-limit" value="3" min="1" required>
+                        <p class="help-text" data-tooltip="Maximum number of simultaneous sessions per user.">Maximum number of simultaneous sessions per user.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" aria-label="Cancel Changes">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" aria-label="Save Changes">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+
+        // Tab switching functionality
+        document.querySelectorAll('.settings-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.settings-tab, .settings-content').forEach(el => {
+                    el.classList.remove('active');
+                    el.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-settings`).classList.add('active');
+            });
+        });
+
+        // Color picker functionality
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const parent = option.parentElement;
+                parent.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+            });
+        });
+
+        // Payment method toggle
+        document.getElementById('payment-method').addEventListener('change', function() {
+            document.getElementById('stripe-settings').style.display = 'none';
+            document.getElementById('paypal-settings').style.display = 'none';
+            if (this.value === 'stripe') {
+                document.getElementById('stripe-settings').style.display = 'block';
+            } else if (this.value === 'paypal') {
+                document.getElementById('paypal-settings').style.display = 'block';
+            }
+        });
+
+        // 2FA method toggle
+        document.getElementById('2fa-method').addEventListener('change', function() {
+            document.getElementById('2fa-email-settings').style.display = this.value === 'email' ? 'block' : 'none';
+        });
+
+        // File upload preview
+        ['logo', 'favicon'].forEach(type => {
+            const input = document.getElementById(`${type}-upload`);
+            const preview = document.getElementById(`${type}-preview`);
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        preview.querySelector('img').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Drag and drop
+            preview.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                preview.classList.add('dragover');
+            });
+            preview.addEventListener('dragleave', () => {
+                preview.classList.remove('dragover');
+            });
+            preview.addEventListener('drop', (e) => {
+                e.preventDefault();
+                preview.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    input.files = e.dataTransfer.files;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        preview.querySelector('img').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Keyboard navigation for tabs
+        document.querySelectorAll('.settings-tab').forEach((tab, index) => {
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    tab.click();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const nextTab = document.querySelectorAll('.settings-tab')[index + 1] || document.querySelectorAll('.settings-tab')[0];
+                    nextTab.focus();
+                    nextTab.click();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const prevTab = document.querySelectorAll('.settings-tab')[index - 1] || document.querySelectorAll('.settings-tab')[document.querySelectorAll('.settings-tab').length - 1];
+                    prevTab.focus();
+                    prevTab.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

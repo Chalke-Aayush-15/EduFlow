@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduFlow | About Us</title>
+<link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2980b9;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-hero: linear-gradient(135deg, #3498db 0%, #2980b9 70%, #1abc9c 100%);
+        --shadow-light: 0 4px 20px rgba(52, 152, 219, 0.15);
+        --shadow-medium: 0 8px 30px rgba(52, 152, 219, 0.2);
+        --shadow-heavy: 0 15px 50px rgba(52, 152, 219, 0.25);
+    }
+    
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+        color: #1a1a1a;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+    
+    /* Animated background particles */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.1;
+    }
+    
+    .particle {
+        position: absolute;
+        background: var(--primary-color);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    /* Enhanced Navigation */
+    .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-light);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--gradient-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            letter-spacing: 0.25px;
+        }
+
+        .btn-outline {
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+    
+    /* Enhanced Hero Section */
+    .about-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 12rem 2rem 8rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,100 1000,100 1000,0"/></svg>');
+        background-size: cover;
+        opacity: 0.1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .about-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 800;
+        animation: slideInUp 1s ease-out;
+        background: linear-gradient(45deg, #fff, #e8f4f8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .about-hero p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        animation: slideInUp 1s ease-out 0.2s both;
+        margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        margin-top: 3rem;
+        animation: slideInUp 1s ease-out 0.4s both;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        display: block;
+        color: #fff;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Enhanced Container */
+    .about-container {
+        max-width: 1200px;
+        margin: -4rem auto 2rem;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Enhanced Sections */
+    .about-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .about-section:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(31, 38, 135, 0.25);
+    }
+    
+    .about-section h2 {
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .about-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    .about-section p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Enhanced Features List */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .feature-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+        border-radius: 15px;
+        padding: 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(52, 152, 219, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-medium);
+        border-color: rgba(52, 152, 219, 0.3);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-icon i {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .feature-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-desc {
+        color: #6b7280;
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Team Section Enhancement */
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+    }
+    
+    .team-member {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(52, 152, 219, 0.1);
+    }
+
+    .team-member::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .team-member:hover::before {
+        opacity: 1;
+    }
+
+    .team-member:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: var(--shadow-medium);
+        border-color: rgba(52, 152, 219, 0.3);
+    }
+    
+    .team-member-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+    }
+
+    .team-member-avatar i {
+        font-size: 3rem;
+        color: white;
+    }
+    
+    .team-member h3 {
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .team-member .role {
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .team-member .description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Enhanced Footer */
+    footer {
+        background: linear-gradient(135deg, var(--dark-color), #34495e);
+        color: white;
+        text-align: center;
+        padding: 3rem 2rem;
+        margin-top: 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(231, 76, 60, 0.1));
+        opacity: 0.5;
+    }
+
+    footer p {
+        position: relative;
+        z-index: 2;
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+
+        .about-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .about-section {
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid,
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Pure CSS animations for sections */
+    .fade-in {
+        opacity: 1;
+        transform: translateY(0);
+        animation: slideInUp 0.8s ease-out;
+    }
+</style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles">
+        <div class="particle" style="width: 4px; height: 4px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 6px; height: 6px; left: 20%; top: 80%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 3px; height: 3px; left: 60%; top: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 5px; height: 5px; left: 80%; top: 70%; animation-delay: 1s;"></div>
+        <div class="particle" style="width: 4px; height: 4px; left: 90%; top: 10%; animation-delay: 3s;"></div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">EduFlow</div>
+            <ul class="nav-links">
+                <li><a th:href="@{/home}">Home</a></li>
+                <li><a th:href="@{/home}">Features</a></li>
+                <li><a href="#" class="active">About</a></li>
+                <li><a th:href="@{/contactus}">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a th:href="@{/valid/login}" class="btn btn-outline">Login</a>
+                <a th:href="@{/valid/register}" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="about-hero">
+        <div class="hero-content">
+            <h1>About Our Learning Platform</h1>
+            <p>Empowering educators and learners through innovative technology and seamless educational experiences</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">50K+</span>
+                    <span class="stat-label">Students</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2K+</span>
+                    <span class="stat-label">Instructors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">95%</span>
+                    <span class="stat-label">Success Rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="about-container">
+        <section class="about-section fade-in">
+            <h2><i class="fas fa-bullseye" style="margin-right: 10px; color: var(--primary-color);"></i>Our Mission</h2>
+            <p>At EduFlow (CourseManager), we believe education should be accessible, engaging, and effective for everyone. Our platform bridges the gap between educators and students, providing cutting-edge tools that enhance the learning experience for both parties.</p>
+            <p>Founded in 2020, we've helped over 50,000 students and 2,000 instructors achieve their educational goals through our comprehensive course management system. Our commitment to innovation and user experience drives us to continuously evolve and improve our platform.</p>
+        </section>
+        
+        <section class="about-section fade-in">
+            <h2><i class="fas fa-star" style="margin-right: 10px; color: var(--primary-color);"></i>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Intuitive Course Creation</h3>
+                    <p class="feature-desc">Advanced course creation and management tools that make building educational content effortless and engaging.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Advanced Analytics</h3>
+                    <p class="feature-desc">Comprehensive progress tracking and analytics to monitor student performance and course effectiveness.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Collaborative Learning</h3>
+                    <p class="feature-desc">Foster collaboration through interactive discussions, group projects, and peer-to-peer learning opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Mobile-First Design</h3>
+                    <p class="feature-desc">Responsive, mobile-friendly design ensuring seamless learning experiences across all devices.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-desc">Bank-level security protocols to protect sensitive educational data and ensure platform reliability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="feature-title">24/7 Support</h3>
+                    <p class="feature-desc">Round-the-clock customer support to assist educators and learners whenever they need help.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about-section fade-in">
+            <h2><i class="fas fa-users-cog" style="margin-right: 10px; color: var(--primary-color);"></i>Our Team</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #6b7280; margin-bottom: 2rem;">
+                Meet the passionate individuals driving innovation in education technology
+            </p>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-member-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>Sarah Johnson</h3>
+                    <p class="role">Founder & CEO</p>
+                    <p class="description">Visionary leader with 15+ years in EdTech, passionate about democratizing quality education worldwide.</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-avatar">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Michael Chen</h3>
+                    <p class="role">Chief Technology Officer</p>
+                    <p class="description">Tech innovator specializing in scalable platforms and machine learning applications in education.</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-avatar">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Emily Rodriguez</h3>
+                    <p class="role">Head of Education</p>
+                    <p class="description">Former educator with deep expertise in curriculum design and pedagogical best practices.</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-avatar">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>David Kim</h3>
+                    <p class="role">Lead Developer</p>
+                    <p class="description">Full-stack developer focused on creating intuitive, performant user experiences for learners.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 EduFlow Course Management System. All rights reserved.</p>
+    </footer>
+
+
+</body>
+</html>

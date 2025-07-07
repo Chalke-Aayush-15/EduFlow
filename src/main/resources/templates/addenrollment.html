@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Add Enrollment | EduFlow </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">
+        :root {
+            --primary-color: #3498db;
+            --primary-light: #5dade2;
+            --primary-dark: #2980b9;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --light-bg: #f8fafc;
+            --dark-color: #2c3e50;
+            --text-light: #6c757d;
+            --border-color: #e1e8ed;
+            --sidebar-width: 260px;
+            --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Enhanced Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--dark-color) 0%, #34495e 100%);
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            box-shadow: var(--shadow-heavy);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            margin-top: 1.5rem;
+        }
+
+        .nav-item {
+            list-style: none;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--light-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Enhanced Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: var(--light-bg);
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            border-radius: 2px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 1600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #2196F3, #21CBF3, #2196F3);
+            animation: gradient-slide 3s ease-in-out infinite;
+        }
+
+        @keyframes gradient-slide {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .form-title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            flex: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label-icon {
+            color: #3498db;
+            font-size: 1.1em;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e8ecef;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            color: #2c3e50;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+
+        input:hover,
+        select:hover {
+            border-color: #bdc3c7;
+            background: white;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233498db' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: #3498db;
+            font-size: 1.2em;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-card {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #ecf0f1;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-card-title {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .status-card-value {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #95a5a6;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-title {
+                font-size: 1.8em;
+            }
+
+            .status-indicators {
+                flex-direction: column;
+            }
+        }
+
+        .required-indicator {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Enhanced Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            EduFlow
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link ">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/course}" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/useradmin}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/instructor}" class="nav-link">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Instructors</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/enrollment}" class="nav-link active">
+                    <i class="fas fa-tasks"></i>
+                    <span>Enrollments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/setting}" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/Admin/logout}" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <h1 class="header-title">
+                <i class="fas fa-plus-circle"></i>
+                Add Enrollment
+            </h1>
+            <div class="user-profile">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div class="user-name">Admin User</div>
+                    <small style="color: #6c757d;">Administrator</small>
+                </div>
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Course Enrollment</h1>
+                <p class="form-subtitle">Complete your enrollment details below</p>
+            </div>
+
+            <form id="enrollmentForm" th:action="@{/Admin/submit_enrollment}" method="post">
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-graduate section-icon"></i>
+                        Student Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="user_id">
+                                <i class="fas fa-user label-icon"></i>
+                                User ID<span class="required-indicator">*</span>
+                            </label>
+                            <input type="text" id="user_id" name="user_id" placeholder="Enter user ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="course_id">
+                                <i class="fas fa-book label-icon"></i>
+                                Course ID<span class="required-indicator">*</span>
+                            </label>
+                            <input type="text" id="course_id" name="course_id" placeholder="Enter course ID" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-alt section-icon"></i>
+                        Enrollment Details
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enroled_at">
+                                <i class="fas fa-calendar-plus label-icon"></i>
+                                Enrollment Date<span class="required-indicator">*</span>
+                            </label>
+                            <input type="datetime-local" id="enrolledAt" name="enrolledAt" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="completed_at">
+                                <i class="fas fa-calendar-check label-icon"></i>
+                                Completion Date
+                            </label>
+                            <input type="datetime-local" id="completedAt" name="completedAt">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="enrolment_status">
+                            <i class="fas fa-tasks label-icon"></i>
+                            Enrollment Status<span class="required-indicator">*</span>
+                        </label>
+                        <select id="enrolment_status" name="enrolment_status" required>
+                            <option value="">Select enrollment status</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                            <option value="withdrawn">Withdrawn</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-credit-card section-icon"></i>
+                        Payment Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount_paid">
+                                <i class="fas fa-dollar-sign label-icon"></i>
+                                Amount Paid<span class="required-indicator">*</span>
+                            </label>
+                            <input type="number" id="amount_paid" name="amount_paid" step="0.01" placeholder="0.00"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_status">
+                                <i class="fas fa-receipt label-icon"></i>
+                                Payment Status<span class="required-indicator">*</span>
+                            </label>
+                            <select id="payment_status" name="payment_status" required>
+                                <option value="">Select payment status</option>
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                                <option value="partial">Partial Payment</option>
+                                <option value="refunded">Refunded</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                    Submit Enrollment
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p>All fields marked with <span class="required-indicator">*</span> are required</p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

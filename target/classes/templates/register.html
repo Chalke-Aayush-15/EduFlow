@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | EduFlow</title>
+<link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+<style type="text/css">
+	:root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .register-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .name-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .login-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .terms {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 1rem;
+        }
+</style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">EduFlow</div>
+        <h2>Create Your Account</h2>
+        
+        <form th:action="@{/valid/register}" method="post">
+            <div class="name-fields">
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="fname" name="fname" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="lname" name="lname" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            
+            <div class="terms">
+                By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+            </div>
+            
+            <button type="submit" class="btn" onClick="sendEmailNotification()">Create Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a th:href="@{/valid/login}">Login here</a>
+            </div>
+        </form>
+    </div>
+    
+    <script type="text/javascript">
+		    const sendEmailNotification = () => {
+		        const email = document.querySelector('input[name="email"]').value;
+		       
+		        fetch('http://localhost:8080/valid/register', {
+		        method: 'POST',
+		        headers: {
+		        'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify({ email: email })
+		        })
+		        .then((response) => {
+		        if (response.ok) {
+		        console.log('Email sent successfully');
+		        } else {
+		        console.error('Failed to send email');
+		        }
+		        })
+		        .catch((error) => {
+		        console.error('Error sending email:', error);
+		        });
+		};
+    </script>
+</body>
+</html>

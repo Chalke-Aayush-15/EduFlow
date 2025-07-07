@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course - EduFlow</title>
+    <link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style type="text/css">
+        :root {
+            --primary-color: #3498db;
+            --primary-light: #5dade2;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --sidebar-width: 280px;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-blue: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            --gradient-light: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 100%);
+            --shadow-light: 0 4px 20px rgba(52, 152, 219, 0.1);
+            --shadow-medium: 0 8px 30px rgba(52, 152, 219, 0.15);
+            --shadow-strong: 0 15px 40px rgba(52, 152, 219, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gradient-light);
+            color: #2c3e50;
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Enhanced Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--dark-color) 0%, #34495e 100%);
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            box-shadow: var(--shadow-heavy);
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-menu {
+            margin-top: 1.5rem;
+        }
+        
+        .nav-item {
+            list-style: none;
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--light-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+        
+        .nav-link:hover, 
+        .nav-link.active {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Enhanced Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: transparent;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+        
+        .header-title {
+            font-size: 2rem;
+            color: var(--dark-color);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .header-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-blue);
+            border-radius: 2px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background: var(--gradient-light);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-light);
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Enhanced Form Container */
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow-strong);
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-blue);
+        }
+
+        /* Enhanced Form Elements */
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .form-group label::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 1px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fafbfc;
+            color: var(--dark-color);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Enhanced Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-blue);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: var(--dark-color);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.4);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f1f5f9;
+        }
+
+        .form-actions > div {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Enhanced Image Upload */
+        .image-preview {
+            width: 200px;
+            height: 120px;
+            border-radius: 12px;
+            background: var(--gradient-light);
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .image-preview:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .file-upload input[type="text"] {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .course-id {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Status Badge Styling */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-draft {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-inactive {
+            background: rgba(149, 165, 166, 0.1);
+            color: #95a5a6;
+        }
+
+        /* Form Validation Styles */
+        .form-group input:valid:not(:placeholder-shown),
+        .form-group textarea:valid:not(:placeholder-shown),
+        .form-group select:valid {
+            border-color: var(--success-color);
+        }
+
+        .form-group input:invalid:not(:placeholder-shown),
+        .form-group textarea:invalid:not(:placeholder-shown),
+        .form-group select:invalid:not(:placeholder-shown) {
+            border-color: var(--accent-color);
+        }
+
+        /* Progress Indicator */
+        .form-progress {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            width: 60%;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-actions > div {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .file-upload {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Loading states */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        /* Hover effects for form elements */
+        .form-group:hover label::after {
+            width: 50px;
+        }
+
+        /* Success message styling */
+        .success-message {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Enhanced Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            EduFlow
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Instructors</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-tasks"></i>
+                    <span>Enrollments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/home}" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    
+    <!-- Enhanced Main Content Area -->
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1 class="header-title">Edit Course</h1>
+                <p style="color: #64748b; margin-top: 0.5rem;">Modify course details and settings</p>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div class="user-name">Admin User</div>
+                    <div style="font-size: 0.85rem; color: #64748b;">Course Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-progress"></div>
+            
+            <form th:action="@{/Admin/update}" th:object="${course}" method="post" id="course-form" enctype="multipart/form-data">
+                <!-- Hidden field for course ID -->
+                <input type="hidden" th:field="*{cid}" id="course-id" name="courseId" value="CS101">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-name">
+                            <i class="fas fa-book" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Course Name
+                        </label>
+                        <input type="text" th:field="*{cname}" id="course-name" name="courseName" required
+                            placeholder="Enter course name" value="Introduction to Web Development">
+                        <div class="course-id">Course ID: CS101</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="course-status">
+                            <i class="fas fa-flag" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Course Status
+                        </label>
+                        <select id="Status" th:field="*{Status}" name="Status" required>
+                            <option value="" disabled>Select Status</option>
+                            <option value="Draft">📝 Draft</option>
+                            <option value="Active">✅ Active</option>
+                            <option value="Inactive">⏸️ Inactive</option>
+                            <option value="Coming-soon">🚀 Coming Soon</option>
+                            <option value="Archived">📦 Archived</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course-image">
+                        <i class="fas fa-image" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                        Course Image
+                    </label>
+                    <div class="file-upload">
+                        <input type="file" id="course-image" name="courseImage" accept="image/*" 
+                            onchange="previewImage(this)" style="display: none;">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('course-image').click()">
+                            <i class="fas fa-upload"></i> Upload New Image
+                        </button>
+                        <input type="text" id="image-url" name="imageUrl" 
+                            placeholder="Or paste image URL here"
+                            value="https://example.com/courses/web-development.jpg">
+                    </div>
+                    <div class="image-preview" id="image-preview">
+                        <img th:src="*{imgurl}" alt="Course Preview" style="display: block;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course-description">
+                        <i class="fas fa-align-left" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                        Course Description
+                    </label>
+                    <textarea id="cdesc" th:field="*{cdesc}" name="cdesc" required
+                        placeholder="Enter detailed course description...">This comprehensive course covers HTML, CSS, JavaScript, and modern web development frameworks. Students will learn to build responsive websites and web applications from scratch.</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-duration">
+                            <i class="fas fa-clock" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Course Duration
+                        </label>
+                        <select id="cduration" th:field="*{cduration}" name="cduration" required>
+                            <option value="" disabled>Select Duration</option>
+                            <option value="1week">📅 1 Week</option>
+                            <option value="2weeks">📅 2 Weeks</option>
+                            <option value="1month">📆 1 Month</option>
+                            <option value="2months">📆 2 Months</option>
+                            <option value="3months">📆 3 Months</option>
+                            <option value="6months">📆 6 Months</option>
+                            <option value="1year">📆 1 Year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course-tutor">
+                            <i class="fas fa-chalkboard-teacher" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Course Instructor
+                        </label>
+                        <select id="ctutor" th:field="*{ctutor}" name="ctutor" required>
+                            <option value="" disabled>Select Instructor</option>
+                            <option value="tutor1">👩‍🏫 Dr. Sarah Johnson</option>
+                            <option value="tutor2">👨‍🏫 Prof. Michael Chen</option>
+                            <option value="tutor3">👩‍💼 Emily Rodriguez</option>
+                            <option value="tutor4">👨‍💻 David Kim</option>
+                            <option value="tutor5">👨‍🔬 Dr. Alan Turing</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-price">
+                            <i class="fas fa-dollar-sign" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Course Price ($)
+                        </label>
+                        <input type="number" th:field="*{cprice}" id="cprice" name="cprice" 
+                               placeholder="0.00" step="0.01" min="0" value="199.99">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course-enrollment">
+                            <i class="fas fa-users" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                            Max Enrollment
+                        </label>
+                        <input type="number" th:field="*{cenrollment}" id="cenrollment" name="cenrollment"
+                               placeholder="Enter maximum students" min="1">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div>
+                        <button type="button" th:href="@{'/Admin/delete/' + ${course.cid}}" class="btn btn-danger" onclick="confirmDelete()">
+                            <i class="fas fa-trash"></i> Delete Course
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" th:href="@{/Admin}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

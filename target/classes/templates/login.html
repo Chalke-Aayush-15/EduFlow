@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | EduFlow</title>
+<link rel="shortcut icon" th:href="@{/icons/book-open-solid.svg}" type="image/x-icon">
+<style type="text/css">
+	:root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .forgot-password {
+            display: block;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .divider {
+            margin: 1.5rem 0;
+            border-top: 1px solid #eee;
+            position: relative;
+        }
+        
+        .divider-text {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 0 1rem;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .register-link {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+</style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">EduFlow</div>
+        <h2>Login to Your Account</h2>
+        
+        <form th:action="@{/valid/login}" method="post">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            
+            <div class="divider">
+                <span class="divider-text">or</span>
+            </div>
+            
+            <div class="register-link">
+                Don't have an account? <a th:href="@{/valid/register}">Register here</a>
+            </div>
+            
+            <div th:if="${error}" class="form-group" style="color: #e74c3c; text-align: center;">
+                <span th:text="${error}"></span>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
