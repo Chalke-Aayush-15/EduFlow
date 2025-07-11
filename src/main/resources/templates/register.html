@@ -12,47 +12,70 @@
             --accent-color: #e74c3c;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            color: #333;
         }
         
         .register-container {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 450px;
-            padding: 2.5rem;
+            max-width: 480px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
         .logo {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-align: center;
+            margin-bottom: 0.5rem;
         }
         
         h2 {
             color: var(--dark-color);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
         
         .form-group {
             margin-bottom: 1.5rem;
+            position: relative;
         }
         
         label {
@@ -60,20 +83,38 @@
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+        
+        .input-container {
+            position: relative;
         }
         
         input, select {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 0.9rem 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        input.valid {
+            border-color: var(--success-color);
+            background-color: white;
+        }
+        
+        input.invalid {
+            border-color: var(--error-color);
+            background-color: #fef7f7;
         }
         
         .name-fields {
@@ -82,22 +123,117 @@
             gap: 1rem;
         }
         
+        .validation-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .validation-icon.show {
+            opacity: 1;
+        }
+        
+        .validation-icon.success {
+            color: var(--success-color);
+        }
+        
+        .validation-icon.error {
+            color: var(--error-color);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .error-message.show {
+            opacity: 1;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .strength-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #e1e8ed;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .strength-weak { background-color: var(--error-color); width: 25%; }
+        .strength-medium { background-color: var(--warning-color); width: 50%; }
+        .strength-strong { background-color: var(--success-color); width: 75%; }
+        .strength-very-strong { background-color: var(--success-color); width: 100%; }
+        
         .btn {
             display: inline-block;
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
         .btn:hover {
-            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-loading {
+            color: transparent;
+        }
+        
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
         .login-link {
@@ -110,12 +246,58 @@
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: var(--secondary-color);
         }
         
         .terms {
             font-size: 0.85rem;
             color: #666;
-            margin-top: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .terms a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .name-fields {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
         }
 </style>
 </head>
@@ -124,39 +306,69 @@
         <div class="logo">EduFlow</div>
         <h2>Create Your Account</h2>
         
-        <form th:action="@{/valid/register}" method="post">
+        <div class="success-message" id="successMessage">
+            Account created successfully! Please check your email for verification.
+        </div>
+        
+        <form th:action="@{/valid/register}" method="post" id="registerForm" novalidate>
             <div class="name-fields">
                 <div class="form-group">
-                    <label for="first-name">First Name</label>
-                    <input type="text" id="fname" name="fname" required>
+                    <label for="fname">First Name</label>
+                    <div class="input-container">
+                        <input type="text" id="fname" name="fname" required>
+                        <span class="validation-icon" id="fnameIcon"></span>
+                    </div>
+                    <div class="error-message" id="fnameError"></div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="last-name">Last Name</label>
-                    <input type="text" id="lname" name="lname" required>
+                    <label for="lname">Last Name</label>
+                    <div class="input-container">
+                        <input type="text" id="lname" name="lname" required>
+                        <span class="validation-icon" id="lnameIcon"></span>
+                    </div>
+                    <div class="error-message" id="lnameError"></div>
                 </div>
             </div>
             
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
+                <div class="input-container">
+                    <input type="email" id="email" name="email" required>
+                    <span class="validation-icon" id="emailIcon"></span>
+                </div>
+                <div class="error-message" id="emailError"></div>
             </div>
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <div class="input-container">
+                    <input type="password" id="password" name="password" required>
+                    <span class="validation-icon" id="passwordIcon"></span>
+                </div>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div id="strengthText"></div>
+                </div>
+                <div class="error-message" id="passwordError"></div>
             </div>
             
             <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-container">
+                    <input type="password" id="confirmPassword" name="confirm-password" required>
+                    <span class="validation-icon" id="confirmPasswordIcon"></span>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
             </div>
             
             <div class="terms">
                 By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
             </div>
             
-            <button type="submit" class="btn" onClick="sendEmailNotification()">Create Account</button>
+            <button type="submit" class="btn" id="submitBtn">Create Account</button>
             
             <div class="login-link">
                 Already have an account? <a th:href="@{/valid/login}">Login here</a>
@@ -164,28 +376,210 @@
         </form>
     </div>
     
-    <script type="text/javascript">
-		    const sendEmailNotification = () => {
-		        const email = document.querySelector('input[name="email"]').value;
-		       
-		        fetch('http://localhost:8080/valid/register', {
-		        method: 'POST',
-		        headers: {
-		        'Content-Type': 'application/json',
-		        },
-		        body: JSON.stringify({ email: email })
-		        })
-		        .then((response) => {
-		        if (response.ok) {
-		        console.log('Email sent successfully');
-		        } else {
-		        console.error('Failed to send email');
-		        }
-		        })
-		        .catch((error) => {
-		        console.error('Error sending email:', error);
-		        });
-		};
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('registerForm');
+            const inputs = form.querySelectorAll('input[required]');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Updated validation rules to match form fields
+            const validationRules = {
+                fname: {
+                    required: true,
+                    pattern: /^[a-zA-Z\s]{2,30}$/,
+                    message: 'First name should only contain letters and be 2-30 characters long'
+                },
+                lname: {
+                    required: true,
+                    pattern: /^[a-zA-Z\s]{2,30}$/,
+                    message: 'Last name should only contain letters and be 2-30 characters long'
+                },
+                email: {
+                    required: true,
+                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Please enter a valid email address'
+                },
+                password: {
+                    required: true,
+                    minLength: 8,
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message: 'Password must be at least 8 characters and include upper, lower, digit, and special character'
+                },
+                confirmPassword: {
+                    required: true,
+                    message: 'Passwords do not match'
+                }
+            };
+
+            // Validation function
+            function validateField(fieldName, value) {
+                const rules = validationRules[fieldName];
+                if (!rules) return { valid: true };
+
+                if (rules.required && !value.trim()) {
+                    return { valid: false, message: `${fieldName} is required` };
+                }
+
+                if (rules.minLength && value.length < rules.minLength) {
+                    return { valid: false, message: rules.message };
+                }
+
+                if (rules.pattern && !rules.pattern.test(value)) {
+                    return { valid: false, message: rules.message };
+                }
+
+                if (fieldName === 'confirmPassword') {
+                    const password = document.getElementById('password').value;
+                    if (value !== password) {
+                        return { valid: false, message: rules.message };
+                    }
+                }
+
+                return { valid: true };
+            }
+
+            // Show validation feedback
+            function showValidationFeedback(fieldName, isValid, message = '') {
+                const input = document.getElementById(fieldName);
+                const icon = document.getElementById(fieldName + 'Icon');
+                const errorDiv = document.getElementById(fieldName + 'Error');
+
+                input.classList.remove('valid', 'invalid');
+                icon?.classList.remove('show', 'success', 'error');
+                errorDiv?.classList.remove('show');
+
+                if (isValid) {
+                    input.classList.add('valid');
+                    icon && (icon.innerHTML = '✓', icon.classList.add('show', 'success'));
+                } else {
+                    input.classList.add('invalid');
+                    icon && (icon.innerHTML = '✗', icon.classList.add('show', 'error'));
+                    if (errorDiv) {
+                        errorDiv.textContent = message;
+                        errorDiv.classList.add('show');
+                    }
+                }
+            }
+
+            // Password strength checker
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                const strengthFill = document.getElementById('strengthFill');
+                const strengthText = document.getElementById('strengthText');
+
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                strengthFill.className = 'strength-fill';
+                const colors = ['var(--error-color)', 'var(--warning-color)', 'var(--success-color)'];
+
+                switch (strength) {
+                    case 0:
+                    case 1:
+                        strengthFill.classList.add('strength-weak');
+                        strengthText.textContent = 'Weak';
+                        strengthText.style.color = colors[0];
+                        break;
+                    case 2:
+                    case 3:
+                        strengthFill.classList.add('strength-medium');
+                        strengthText.textContent = 'Medium';
+                        strengthText.style.color = colors[1];
+                        break;
+                    case 4:
+                        strengthFill.classList.add('strength-strong');
+                        strengthText.textContent = 'Strong';
+                        strengthText.style.color = colors[2];
+                        break;
+                    case 5:
+                        strengthFill.classList.add('strength-very-strong');
+                        strengthText.textContent = 'Very Strong';
+                        strengthText.style.color = colors[2];
+                        break;
+                }
+
+                return strength;
+            }
+
+            // Real-time validation listeners
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    const fieldName = this.id;
+                    const value = this.value;
+                    const validation = validateField(fieldName, value);
+
+                    if (fieldName === 'password') {
+                        checkPasswordStrength(value);
+                        const confirmPassword = document.getElementById('confirmPassword');
+                        if (confirmPassword?.value) {
+                            const confirmValidation = validateField('confirmPassword', confirmPassword.value);
+                            showValidationFeedback('confirmPassword', confirmValidation.valid, confirmValidation.message);
+                        }
+                    }
+
+                    showValidationFeedback(fieldName, validation.valid, validation.message);
+                });
+
+                input.addEventListener('blur', function () {
+                    const fieldName = this.id;
+                    const value = this.value;
+                    const validation = validateField(fieldName, value);
+                    showValidationFeedback(fieldName, validation.valid, validation.message);
+                });
+            });
+
+            // Form submission with proper validation
+            form.addEventListener('submit', function (e) {
+                let isFormValid = true;
+
+                // Validate all fields before submission
+                inputs.forEach(input => {
+                    const fieldName = input.id;
+                    const value = input.value;
+                    const validation = validateField(fieldName, value);
+
+                    showValidationFeedback(fieldName, validation.valid, validation.message);
+
+                    if (!validation.valid) {
+                        isFormValid = false;
+                    }
+                });
+
+                if (!isFormValid) {
+                    e.preventDefault(); // Prevent form submission if validation fails
+                    return;
+                }
+
+                // If validation passes, show loading state
+                submitBtn.classList.add('btn-loading');
+                submitBtn.disabled = true;
+            });
+            
+            // Send email notification
+            const sendEmailNotification = () => {
+                const email = document.querySelector('input[name="email"]').value;
+
+                fetch('http://localhost:8080/mail/sendEmail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Email sent successfully');
+                    } else {
+                        console.error('Failed to send email');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending email:', error);
+                });
+            };
+        });
     </script>
+	
 </body>
 </html>

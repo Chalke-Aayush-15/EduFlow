@@ -30,6 +30,8 @@ public interface userrepo extends JpaRepository<userentity, Integer>{
 	@Query("SELECT COUNT(u) FROM userentity u WHERE u.status = 'Active'")
 	int getTotalActiveCourse();
 
+	boolean existsByEmail(String email);
+
 
 
 	

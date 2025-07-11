@@ -25,6 +25,10 @@ public class UserService {
 	  public userentity getUserByEmail(String email) {
 	        return ur.findByEmail(email);
 	    }
+
+	public userentity getUserById(Integer id) {
+        return ur.findById(id).orElse(null);
+    }
 	
 	
 	

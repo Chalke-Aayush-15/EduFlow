@@ -396,6 +396,30 @@
             box-shadow: var(--shadow-medium);
         }
 
+        /* Add these styles to your existing CSS */
+		.btn-enrolled {
+		    display: inline-block;
+		    background: linear-gradient(135deg, #00b894, #00a085);
+		    color: white;
+		    padding: 1rem 2rem;
+		    border-radius: 50px;
+		    text-decoration: none;
+		    font-weight: 600;
+		    width: 100%;
+		    text-align: center;
+		    font-size: 1rem;
+		    border: none;
+		    cursor: not-allowed;
+		    opacity: 0.8;
+		}
+		
+		.btn-enrolled i {
+		    margin-right: 0.5rem;
+		}
+		
+		.enrolled-status {
+		    text-align: center;
+		}
         
         /* Upcoming Deadlines */
         .deadlines-card {
@@ -671,7 +695,8 @@
         <h2 class="section-title">Apply Courses</h2>
         <div class="course-grid">
             <!-- Course 1 -->
-            <div class="course-card" th:each="course : ${Course}">
+            <!-- Course Card Section - Replace the existing course card section -->
+			<div class="course-card" th:each="course : ${Course}">
 			    <img class="course-img" alt="Course Image" th:src="${course.imgurl}">
 			    <div class="course-badge">New</div>
 			    <div class="course-content">
@@ -688,10 +713,28 @@
 			                <span th:text="${course.cprice}" th:attr="data-price=${course.cprice}"></span>
 			            </div>
 			        </div>
+			        
+			        <!-- Conditional Enrollment Button -->
 			        <div class="course-actions">
-			            <a href="javascript:void(0);" class="btn-link btn-enroll"
-			               th:attr="data-price=${course.cprice}, data-cname=${course.cname}, data-course-id=${course.cid}" 
-			               onclick="payNow(this)">Enroll Now</a>
+			            <!-- Show "Already Enrolled" if user is enrolled -->
+			            <div th:if="${enrollmentStatus[course.cid]}" class="enrolled-status">
+			                <button class="btn-enrolled" disabled>
+			                    <i class="fas fa-check-circle"></i>
+			                    Already Enrolled
+			                </button>
+			            </div>
+			            
+			            <!-- Show "Enroll Now" if user is not enrolled -->
+			            <div th:unless="${enrollmentStatus[course.cid]}">
+			                <a href="javascript:void(0);" class="btn-link btn-enroll"
+			                   th:attr="data-price=${course.cprice}, 
+			                            data-cname=${course.cname}, 
+			                            data-course-id=${course.cid}, 
+			                            data-user-id=${session.loggeduser.id},
+			                            data-user-email=${session.loggeduser.email},
+			                            data-user-name=${session.loggeduser.fname + ' ' + session.loggeduser.lname}" 
+			                   onclick="payNow(this)">Enroll Now</a>
+			            </div>
 			        </div>
 			    </div>
 			</div>
@@ -741,83 +784,166 @@
         </div>
     </main>
     
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-	<script>
-	function payNow(btn) {
-	    console.log("Proceed to Pay clicked");
-
-	    const amount = parseFloat(btn.getAttribute("data-price"));
-	    const cname = btn.getAttribute("data-cname") || "Course";
-	    
-	    // Get course ID from the button - you'll need to add this to your HTML
-	    const courseId = btn.getAttribute("data-course-id");
-
-	    if (isNaN(amount) || !courseId) {
-	        alert("Invalid course details");
-	        return;
-	    }
-
-	    fetch(`/getTransaction/${amount}`)
-	        .then(response => response.json())
-	        .then(data => {
-	            const options = {
-	                "key": data.key,
-	                "amount": data.amount,
-	                "currency": data.currency,
-	                "name": "EduFlow",
-	                "description": cname,
-	                "order_id": data.orderId,
-	                "handler": function (response) {
-	                    // Payment successful - now enroll the user
-	                    enrollUserInCourse(courseId, response.razorpay_payment_id, amount);
-	                },
-	                "prefill": {
-	                    "name": "Student",
-	                    "email": "student@example.com",
-	                    "contact": "9999999999"
-	                },
-	                "theme": {
-	                    "color": "#0d6efd"
-	                }
-	            };
-	            const rzp = new Razorpay(options);
-	            rzp.open();
-	        })
-	        .catch(error => {
-	            console.error("Error fetching transaction details:", error);
-	            alert("❌ Failed to initiate payment. Please try again.");
-	        });
-	}
-
-	function enrollUserInCourse(courseId, paymentId, amount) {
-	    // Make API call to enroll user after successful payment
-	    fetch('/user/enroll-after-payment', {
-	        method: 'POST',
-	        headers: {
-	            'Content-Type': 'application/json',
-	        },
-	        body: JSON.stringify({
-	            courseId: courseId,
-	            paymentId: paymentId,
-	            amountPaid: amount
-	        })
-	    })
-	    .then(response => response.json())
-	    .then(data => {
-	        if (data.success) {
-	            alert("✅ Payment Successful & Enrollment Complete! Payment ID: " + paymentId);
-	            // Optionally refresh the page or redirect to my courses
-	            window.location.href = '/user/mycourse';
-	        } else {
-	            alert("❌ Payment successful but enrollment failed. Please contact support.");
-	        }
-	    })
-	    .catch(error => {
-	        console.error("Error enrolling user:", error);
-	        alert("❌ Payment successful but enrollment failed. Please contact support.");
-	    });
-	}
-	</script>
+	<!-- Updated JavaScript section -->
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script>
+			function payNow(btn) {
+			    console.log("Proceed to Pay clicked");
+	
+			    const amount = parseFloat(btn.getAttribute("data-price"));
+			    const cname = btn.getAttribute("data-cname") || "Course";
+			    const courseId = btn.getAttribute("data-course-id");
+			    const userId = btn.getAttribute("data-user-id");
+			    const userEmail = btn.getAttribute("data-user-email");
+			    const userName = btn.getAttribute("data-user-name");
+	
+			    console.log("User Email:", userEmail);
+			    console.log("User Name:", userName);
+	
+			    if (isNaN(amount) || !courseId || !userId) {
+			        alert("Invalid course details");
+			        return;
+			    }
+	
+			    if (!userEmail) {
+			        alert("User email not found. Please ensure you are logged in.");
+			        return;
+			    }
+	
+			    // First check if user is already enrolled
+			    fetch(`/api/enrollment/check?userId=${userId}&courseId=${courseId}`)
+			        .then(response => response.json())
+			        .then(isEnrolled => {
+			            if (isEnrolled) {
+			                alert("You are already enrolled in this course!");
+			                location.reload(); // Refresh to update UI
+			                return;
+			            }
+			            
+			            // Proceed with payment if not enrolled
+			            proceedWithPayment(amount, cname, courseId, userEmail, userName, btn);
+			        })
+			        .catch(error => {
+			            console.error("Error checking enrollment:", error);
+			            // Still proceed with payment check on server side
+			            proceedWithPayment(amount, cname, courseId, userEmail, userName, btn);
+			        });
+			}
+	
+			function proceedWithPayment(amount, cname, courseId, userEmail, userName, btn) {
+			    fetch(`/getTransaction/${amount}`)
+			        .then(response => response.json())
+			        .then(data => {
+			            const options = {
+			                "key": data.key,
+			                "amount": data.amount,
+			                "currency": data.currency,
+			                "name": "EduFlow",
+			                "description": cname,
+			                "order_id": data.orderId,
+			                "handler": function (response) {
+			                    enrollUserInCourse(courseId, response.razorpay_payment_id, amount, btn, cname, userEmail, userName);
+			                },
+			                "prefill": {
+			                    "name": userName || "Student",
+			                    "email": userEmail || "student@example.com",
+			                    "contact": "9999999999"
+			                },
+			                "theme": {
+			                    "color": "#0d6efd"
+			                }
+			            };
+			            const rzp = new Razorpay(options);
+			            rzp.open();
+			        })
+			        .catch(error => {
+			            console.error("Error fetching transaction details:", error);
+			            alert("❌ Failed to initiate payment. Please try again.");
+			        });
+			}
+	
+			function enrollUserInCourse(courseId, paymentId, amount, btn, courseName, userEmail, userName) {
+			    const userId = btn.getAttribute('data-user-id');
+	
+			    fetch('/user/enroll-after-payment', {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			        body: JSON.stringify({
+			            courseId: courseId,
+			            paymentId: paymentId,
+			            amountPaid: amount,
+			            userId: userId
+			        })
+			    })
+			    .then(response => response.json())
+			    .then(data => {
+			        if (data.success) {
+			            alert("✅ Payment Successful & Enrollment Complete! Payment ID: " + paymentId);
+			            
+			            // Send email notification
+			            sendEnrollmentEmail(userEmail, userName, courseName, paymentId, amount);
+			            
+			            setTimeout(() => {
+			                window.location.href = '/user/mycourse';
+			            }, 1500);
+			        } else {
+			            if (data.message && data.message.includes("already enrolled")) {
+			                alert("❌ You are already enrolled in this course!");
+			                location.reload();
+			            } else {
+			                alert("❌ Payment successful but enrollment failed. Please contact support.");
+			            }
+			        }
+			    })
+			    .catch(error => {
+			        console.error("Error enrolling user:", error);
+			        alert("❌ Payment successful but enrollment failed. Please contact support.");
+			    });
+			}
+	
+			function sendEnrollmentEmail(userEmail, userName, courseName, paymentId, amount) {
+			    if (!userEmail) {
+			        console.error("User email not available");
+			        return;
+			    }
+	
+			    console.log("Sending email to:", userEmail);
+			    
+			    fetch('/mail/sendEnrollmentEmail', {
+			        method: 'POST',
+			        headers: { 'Content-Type': 'application/json' },
+			        body: JSON.stringify({
+			            to: userEmail,
+			            userName: userName,
+			            courseName: courseName,
+			            paymentId: paymentId,
+			            amountPaid: amount,
+			            enrollmentDate: new Date().toLocaleDateString()
+			        })
+			    })
+			    .then(response => {
+			        console.log("Email response status:", response.status);
+			        if (response.ok) {
+			            console.log('Email sent successfully');
+			            return response.text();
+			        } else {
+			            console.error('Failed to send email, status:', response.status);
+			            return response.text().then(text => {
+			                console.error('Email error response:', text);
+			                throw new Error('Email sending failed');
+			            });
+			        }
+			    })
+			    .then(result => {
+			        console.log('Email result:', result);
+			    })
+			    .catch(error => {
+			        console.error('Error sending email:', error);
+			    });
+			}
+		</script>
     
 </body>
 </html>

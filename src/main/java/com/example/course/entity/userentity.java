@@ -8,6 +8,9 @@ import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,13 +33,19 @@ public class userentity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
+    @NotBlank(message = "First name is required")
 	private String fname;
+	@NotBlank(message = "Last name is required")
 	private String lname;
 	
 	@Column(unique = true)
+	@NotBlank(message = "Email is required")
+    @Email(message = "Please provide a valid email")
 	private String email;
 	private String phno;
+	@NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
 	private String password;
 	private String role;
 	private String status = "Active";
