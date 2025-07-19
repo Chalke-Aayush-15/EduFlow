@@ -821,6 +821,29 @@
 		    }
 		}
         
+        .no-enrollments {
+    text-align: center;
+    padding: 60px 20px;
+    grid-column: 1 / -1; /* Span full width of grid */
+}
+
+.empty-state {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-state i {
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -897,31 +920,50 @@
         </div>
 
 <div class="courses-grid">
-    <div class="course-card" th:each="enrollment : ${enrollments}">
-    	<div class="course-banner">
-        <img class="course-banner-img" th:src="${enrollment.course.imgurl}">
-            <span class="course-code" th:text="${enrollment.course.cid}">Course Code</span>
-     	</div>
-     
-        <div class="course-content">
-            <h3 class="course-title" th:text="${enrollment.course.cname}">Course Title</h3>
-            <p class="course-instructor" th:text="${enrollment.course.ctutor}">Instructor</p>
-            <div class="course-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 6%;"></div>
-                </div>
-                <div class="progress-text">
-                    <span>6% Complete</span>
-                    <span>Week 1/12</span>
-                </div>
-            </div>
-            <div class="course-actions">
-                <button class="btn btn-outline"><i class="fas fa-info-circle"></i> Details</button>
-                <button class="btn btn-primary"><i class="fas fa-door-open"></i> Enter</button>
-            </div>
-        </div>
+    <!-- Check if enrollments is null or empty -->
+    <div th:if="${enrollments == null or #lists.isEmpty(enrollments)}" class="no-enrollments">
+        <div class="empty-state">
+            <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+            <h3>No Courses Enrolled</h3>
+            <p class="text-muted">You haven't enrolled in any courses yet.</p>
+            <a th:href="@{/user/index}" class="btn btn-primary">
+                <i class="fas fa-search"></i> Browse Courses
+            </a>
         </div>
     </div>
+
+    <!-- Show courses if enrollments exist -->
+    <div th:if="${enrollments != null and !#lists.isEmpty(enrollments)}">
+        <div class="course-card" th:each="enrollment : ${enrollments}">
+            <div class="course-banner">
+                <img class="course-banner-img" th:src="${enrollment.course.imgurl}">
+                <span class="course-code" th:text="${enrollment.course.cid}">Course Code</span>
+            </div>
+
+            <div class="course-content">
+                <h3 class="course-title" th:text="${enrollment.course.cname}">Course Title</h3>
+                <p class="course-instructor" th:text="${enrollment.course.ctutor}">Instructor</p>
+                <div class="course-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 6%;"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>6% Complete</span>
+                        <span>Week 1/12</span>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <a th:href="@{/user/getdetails}" class="btn btn-outline">
+                        <i class="fas fa-info-circle"></i> Details
+                    </a>
+                    <a th:href="@{/user/content}" class="btn btn-primary">
+                        <i class="fas fa-door-open"></i> Enter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 

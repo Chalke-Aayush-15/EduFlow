@@ -46,4 +46,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Integer>
     // Find recent enrollments
     @Query("SELECT e FROM Enrollment e JOIN FETCH e.user JOIN FETCH e.course ORDER BY e.enrolledAt DESC LIMIT 10")
     List<Enrollment> findRecentEnrollments();
+
+    
 }

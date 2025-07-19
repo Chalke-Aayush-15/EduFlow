@@ -23,6 +23,21 @@ import com.example.course.repository.courserepo;
 import com.example.course.repository.userrepo;
 import com.example.course.service.courseservice;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+// Add these imports to your CourseService class
+import java.io.IOException;
+import java.io.PrintWriter;
+// OR for Spring Boot 3.x+
+import jakarta.servlet.http.HttpServletResponse;
+
+// If you're using Spring Boot 3.x+, make sure you have:
+import jakarta.servlet.http.HttpServletResponse;
+
+// If you're using Spring Boot 2.x, use:
 
 import jakarta.servlet.http.HttpSession;
 
@@ -88,6 +103,8 @@ public class adminlogic {
 		return "courseadmin";
 	}
 	
+	
+	
 	@GetMapping("/useradmin")
 	public String useradmin(Model model) {
 		model.addAttribute("User",cs.getusertable());
@@ -108,6 +125,8 @@ public class adminlogic {
 	public String enroll(Model model){
 		List<Enrollment> enroll = enrollmentRepo.findAll();
 		model.addAttribute("enroll",enroll);
+		model.addAttribute("roll",enrollmentRepo.count());
+		model.addAttribute("Totalstudent", cs.gettotalstudent());
 		return "enrollmentAdmin";
 	}
 	
@@ -190,6 +209,59 @@ public class adminlogic {
 	    model.addAttribute("activeRole", role == null ? "ALL" : role.toUpperCase());
 
 	    return "userAdmin"; // your HTML page name
+	}
+	
+	// Add this method to your AdminController class
+
+	@GetMapping("/export-csv")
+	public void exportCoursesToCSV(HttpServletResponse response) throws IOException {
+	    // Set response headers
+	    response.setContentType("text/csv");
+	    response.setHeader("Content-Disposition", "attachment; filename=\"courses.csv\"");
+	    
+	    // Get all courses
+	    List<course> courses = cs.getcourse();
+	    
+	    // Create CSV writer
+	    PrintWriter writer = response.getWriter();
+	    
+	    // Write CSV header
+	    writer.println("Course ID,Course Name,Instructor,Enrollment Count,Created Date,Status,Description,Duration,Price");
+	    
+	    // Write course data
+	    for (course course : courses) {
+	        StringBuilder line = new StringBuilder();
+	        line.append(escapeCSV(String.valueOf(course.getCid()))).append(",");
+	        line.append(escapeCSV(course.getCname())).append(",");
+	        line.append(escapeCSV(course.getCtutor())).append(",");
+	        line.append(escapeCSV(String.valueOf(course.getCenrollment()))).append(",");
+	        line.append(escapeCSV(course.getCreatedAt() != null ? course.getCreatedAt().toString() : "")).append(",");
+	        line.append(escapeCSV(course.getStatus())).append(",");
+	        line.append(escapeCSV(course.getCdesc() != null ? course.getCdesc() : "")).append(",");
+	        line.append(escapeCSV(course.getCduration() != null ? course.getCduration() : "")).append(",");
+	        line.append(escapeCSV(course.getCprice() != null ? course.getCprice().toString() : ""));
+	        
+	        writer.println(line.toString());
+	    }
+	    
+	    writer.flush();
+	    writer.close();
+	}
+
+	// Helper method to escape CSV values
+	private String escapeCSV(String value) {
+	    if (value == null) {
+	        return "";
+	    }
+	    
+	    // If the value contains comma, quote, or newline, wrap it in quotes
+	    if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+	        // Replace any quotes with double quotes
+	        value = value.replace("\"", "\"\"");
+	        return "\"" + value + "\"";
+	    }
+	    
+	    return value;
 	}
 
 }

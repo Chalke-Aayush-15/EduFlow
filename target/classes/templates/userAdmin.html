@@ -638,88 +638,585 @@
             font-weight: 500;
         }
         
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            :root {
-                --sidebar-width: 240px;
-            }
-            
-            .main-content {
-                margin-left: var(--sidebar-width);
-                width: calc(100% - var(--sidebar-width));
-                padding: 1.5rem;
-            }
-            
-            .header-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            :root {
-                --sidebar-width: 0px;
-            }
-            
-            .sidebar {
-                transform: translateX(-100%);
-                transition: var(--transition);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 1rem;
-            }
-            
-            .search-filter-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-bar {
-                min-width: 100%;
-            }
-            
-            .role-filters {
-                justify-content: center;
-            }
-            
-            .admin-table-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-            
-            th, td {
-                padding: 1rem;
-            }
-            
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-            
-            .header-title {
-                font-size: 1.75rem;
-                text-align: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-btns {
-                flex-direction: column;
-            }
-            
-            th, td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.8rem;
-            }
-        }
+        /* Enhanced Responsive Media Queries for Users Management */
+
+/* Large Desktop (1200px and above) - Base styles already defined */
+
+/* Medium Desktop (992px to 1199px) */
+@media screen and (max-width: 1199px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+    
+    .main-content {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        padding: 1.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.6rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-bar {
+        min-width: 300px;
+    }
+}
+
+/* Tablet Landscape (768px to 991px) */
+@media screen and (max-width: 991px) {
+    :root {
+        --sidebar-width: 200px;
+    }
+    
+    .sidebar {
+        width: var(--sidebar-width);
+    }
+    
+    .main-content {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        padding: 1rem;
+    }
+    
+    .header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .search-filter-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .search-bar {
+        min-width: 100%;
+    }
+    
+    .role-filters {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .admin-table-header {
+        padding: 1.5rem;
+    }
+    
+    .table-title {
+        font-size: 1.3rem;
+    }
+    
+    th, td {
+        padding: 1rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .user-mini-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+    
+    .user-name-cell {
+        font-size: 0.9rem;
+    }
+    
+    .role-badge,
+    .status {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Tablet Portrait (768px and below) */
+@media screen and (max-width: 768px) {
+    :root {
+        --sidebar-width: 0px;
+    }
+    
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    /* Add hamburger menu */
+    .main-content::before {
+        content: '☰';
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 1001;
+        background: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+        margin-top: 3rem;
+        padding: 1rem;
+    }
+    
+    .header-title {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+    
+    .user-profile {
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .search-filter-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .search-bar {
+        min-width: 100%;
+    }
+    
+    .role-filters {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .role-tag {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .admin-table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+        padding: 1rem;
+    }
+    
+    .table-title {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    
+    /* Make table scrollable horizontally */
+    .admin-table {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 650px;
+    }
+    
+    th, td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .user-cell {
+        gap: 0.5rem;
+    }
+    
+    .user-mini-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+    
+    .user-name-cell {
+        font-size: 0.85rem;
+    }
+    
+    .role-badge,
+    .status {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .pagination {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        padding: 1rem;
+    }
+    
+    .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        min-width: 36px;
+    }
+}
+
+/* Mobile Large (576px and below) */
+@media screen and (max-width: 576px) {
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    .header {
+        padding: 0.75rem;
+        margin-top: 2.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .search-bar input {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .search-bar button {
+        padding: 0 1.25rem;
+    }
+    
+    .role-filters {
+        gap: 0.4rem;
+    }
+    
+    .role-tag {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .admin-table-header {
+        padding: 0.75rem;
+    }
+    
+    .table-title {
+        font-size: 1.1rem;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    th, td {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    .user-cell {
+        gap: 0.4rem;
+    }
+    
+    .user-mini-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .user-name-cell {
+        font-size: 0.8rem;
+    }
+    
+    .role-badge,
+    .status {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .pagination {
+        gap: 0.25rem;
+        padding: 0.75rem;
+    }
+    
+    .page-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+        min-width: 32px;
+    }
+}
+
+/* Mobile Small (480px and below) */
+@media screen and (max-width: 480px) {
+    .main-content::before {
+        top: 0.75rem;
+        left: 0.75rem;
+        font-size: 1.25rem;
+        padding: 0.4rem;
+    }
+    
+    .header {
+        margin-top: 2rem;
+        padding: 0.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.1rem;
+    }
+    
+    .user-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .stats-grid {
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.5rem;
+    }
+    
+    .search-bar input {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .role-tag {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .admin-table-header {
+        padding: 0.5rem;
+    }
+    
+    .table-title {
+        font-size: 1rem;
+    }
+    
+    table {
+        min-width: 550px;
+    }
+    
+    th, td {
+        padding: 0.5rem 0.3rem;
+        font-size: 0.7rem;
+    }
+    
+    .user-mini-avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+    
+    .user-name-cell {
+        font-size: 0.75rem;
+    }
+    
+    .role-badge,
+    .status {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    /* Stack some table cells vertically on very small screens */
+    .user-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+    
+    .user-info {
+        width: 100%;
+    }
+}
+
+/* Extra Small Mobile (320px and below) */
+@media screen and (max-width: 320px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .sidebar {
+        width: 100%;
+        left: -100%;
+    }
+    
+    .header-title {
+        font-size: 1rem;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-bar input {
+        border-radius: var(--border-radius);
+        border-right: 2px solid rgba(52, 152, 219, 0.1);
+        margin-bottom: 0.5rem;
+    }
+    
+    .search-bar button {
+        border-radius: var(--border-radius);
+        width: 100%;
+    }
+    
+    .role-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .role-tag,
+    .btn {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+    
+    table {
+        min-width: 100%;
+        font-size: 0.65rem;
+    }
+    
+    th, td {
+        padding: 0.4rem 0.2rem;
+    }
+    
+    /* Show only essential columns on very small screens */
+    th:nth-child(n+4),
+    td:nth-child(n+4) {
+        display: none;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .page-link {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .sidebar {
+        width: 200px;
+        padding: 1rem 0;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+        padding: 0 1rem 1rem;
+    }
+    
+    .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+/* High DPI screens */
+@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
+    .user-mini-avatar,
+    .user-avatar {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .sidebar {
+        box-shadow: 0 0 40px rgba(0,0,0,0.15);
+    }
+    
+    .admin-table {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    /* Add dark mode styles here if needed */
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -898,6 +1395,18 @@
 	      const courseCell = row.querySelector(".user-name-cell");
 	      const text = courseCell ? courseCell.innerText.toLowerCase() : "";
 	      row.style.display = text.includes(filter) ? "" : "none";
+	    });
+	    
+	 // Add this script for mobile menu functionality
+	    document.addEventListener('DOMContentLoaded', function() {
+	        const sidebar = document.querySelector('.sidebar');
+	        const mainContent = document.querySelector('.main-content');
+	        
+	        mainContent.addEventListener('click', function(e) {
+	            if (e.target === mainContent.querySelector('::before')) {
+	                sidebar.classList.toggle('active');
+	            }
+	        });
 	    });
 	  });
 </script>

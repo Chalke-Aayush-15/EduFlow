@@ -62,6 +62,7 @@ public class EnrollmentService {
     }
     
     
+    
     // Get all enrollments for admin dashboard
     public List<Enrollment> getAllEnrollments() {
         return enrollmentRepository.findAllEnrollmentsWithDetails();

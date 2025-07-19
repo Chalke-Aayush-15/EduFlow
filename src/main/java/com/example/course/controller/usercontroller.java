@@ -155,6 +155,18 @@ public class usercontroller {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	    }
 	}
+	
+	@GetMapping("/getdetails")
+	public String details()
+	{
+		return "coursedetail";
+	}
+	
+	@GetMapping("/content")
+	public String content()
+	{
+		return "content";
+	}
 
 	@GetMapping("/usercalender")
 	public String usercalender(Model model, HttpSession session) {

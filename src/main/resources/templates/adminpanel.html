@@ -556,6 +556,542 @@
         .loading {
             animation: pulse 2s infinite;
         }
+        
+        /* Enhanced Responsive Media Queries */
+
+/* Large Desktop (1440px and up) */
+@media (min-width: 1440px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .main-content {
+        padding: 2.5rem;
+    }
+}
+
+/* Desktop (1200px to 1439px) */
+@media (max-width: 1439px) and (min-width: 1200px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Large Tablet/Small Desktop (1024px to 1199px) */
+@media (max-width: 1199px) and (min-width: 1024px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .main-content {
+        padding: 1.5rem;
+    }
+    
+    .header {
+        padding: 1.2rem 1.5rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+/* Tablet (768px to 1023px) */
+@media (max-width: 1023px) and (min-width: 768px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+    
+    .sidebar {
+        width: var(--sidebar-width);
+    }
+    
+    .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 1.5rem;
+        width: calc(100% - var(--sidebar-width));
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .header {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .user-profile {
+        align-self: flex-end;
+    }
+    
+    .admin-table-header {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .table-actions {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    th, td {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .card {
+        padding: 1.2rem;
+    }
+    
+    .card-value {
+        font-size: 1.8rem;
+    }
+    
+    .nav-link {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .logo {
+        font-size: 1.4rem;
+        padding: 0 1rem 1rem;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1001;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        width: 100%;
+    }
+    
+    .header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .header-title {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .user-profile {
+        justify-content: center;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .card {
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .card-icon {
+        margin: 0 auto 1rem;
+    }
+    
+    .card-value {
+        font-size: 1.6rem;
+    }
+    
+    .admin-table-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .table-title {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .search-box input {
+        width: 100%;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    th, td {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .action-btns {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .status {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .stat-item {
+        padding: 0.8rem;
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Mobile Medium (480px to 575px) */
+@media (max-width: 575px) and (min-width: 480px) {
+    .main-content {
+        padding: 0.8rem;
+    }
+    
+    .header {
+        padding: 0.8rem;
+    }
+    
+    .header-title {
+        font-size: 1.2rem;
+    }
+    
+    .dashboard-cards {
+        gap: 0.8rem;
+    }
+    
+    .card {
+        padding: 0.8rem;
+    }
+    
+    .card-value {
+        font-size: 1.4rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+    
+    .admin-table-header {
+        padding: 0.8rem;
+    }
+    
+    .table-title {
+        font-size: 1rem;
+    }
+    
+    th, td {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile Small (320px to 479px) */
+@media (max-width: 479px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .header {
+        padding: 0.5rem;
+    }
+    
+    .header-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard-cards {
+        gap: 0.6rem;
+    }
+    
+    .card {
+        padding: 0.6rem;
+    }
+    
+    .card-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+    
+    .card-value {
+        font-size: 1.2rem;
+    }
+    
+    .card-title {
+        font-size: 0.8rem;
+    }
+    
+    .card-change {
+        font-size: 0.75rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .stat-item {
+        padding: 0.6rem;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.65rem;
+    }
+    
+    .admin-table-header {
+        padding: 0.6rem;
+    }
+    
+    .table-title {
+        font-size: 0.9rem;
+    }
+    
+    th, td {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+    }
+    
+    .search-box input {
+        padding: 0.4rem 0.8rem 0.4rem 2rem;
+        font-size: 0.8rem;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+    
+    .user-name {
+        font-size: 0.8rem;
+    }
+    
+    .status {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+    }
+}
+
+/* Mobile Hamburger Menu (for sidebar toggle) */
+@media (max-width: 767px) {
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1002;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: var(--shadow-medium);
+    }
+    
+    .mobile-menu-toggle:hover {
+        background: var(--primary-dark);
+    }
+    
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    .main-content {
+        padding-top: 4rem;
+    }
+}
+
+/* Hide mobile menu toggle on desktop */
+@media (min-width: 768px) {
+    .mobile-menu-toggle {
+        display: none;
+    }
+    
+    .sidebar-overlay {
+        display: none;
+    }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .header {
+        padding: 0.5rem 1rem;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .card {
+        padding: 0.5rem;
+    }
+    
+    .card-value {
+        font-size: 1.2rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* High DPI/Retina displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .card-icon {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-avatar {
+        border: 0.5px solid rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        width: 100%;
+    }
+    
+    .header {
+        background: white !important;
+        box-shadow: none !important;
+        border-bottom: 2px solid #000;
+    }
+    
+    .card {
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #000;
+    }
+    
+    .btn {
+        display: none;
+    }
+    
+    .action-btns {
+        display: none;
+    }
+}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -701,5 +1237,14 @@
             </div>
         </div>
     </main>
+    <script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+    </script>
 </body>
 </html>

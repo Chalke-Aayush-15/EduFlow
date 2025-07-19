@@ -18,7 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 
-@Entity
+@Entity(name = "Course") 
 @EntityListeners(AuditingEntityListener.class)
 public class course {
 	
@@ -33,7 +33,7 @@ public class course {
 	private String ctutor;
 	private String cdesc;
 	private String cduration;
-	private double cprice;
+	private Double cprice;
 	private int cenrollment;
 	private String Status;
 	
@@ -49,7 +49,7 @@ public class course {
 		super();
 	}
 	
-	public course(int cid, String imgurl, String cname, String ctutor, String cdesc, String cduration, double cprice,
+	public course(int cid, String imgurl, String cname, String ctutor, String cdesc, String cduration, Double cprice,
 			int cenrollment, String status, Instant createdAt) {
 		super();
 		this.cid = cid;
@@ -116,10 +116,10 @@ public class course {
 	public void setCduration(String cduration) {
 		this.cduration = cduration;
 	}
-	public double getCprice() {
+	public Double getCprice() {
 		return cprice;
 	}
-	public void setCprice(double cprice) {
+	public void setCprice(Double cprice) {
 		this.cprice = cprice;
 	}
 	public int getCenrollment() {
